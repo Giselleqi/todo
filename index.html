@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>To Do</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #ffffff; --fg: #111111; --muted: #666666; --faint: #aaaaaa;
+    --border: #dddddd; --field: #ffffff; --btn: #efefef; --overdue: #cc0000;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #1b1b1f; --fg: #eeeeee; --muted: #a0a0a8; --faint: #666670;
+    --border: #3a3a42; --field: #26262c; --btn: #33333b; --overdue: #ff6b6b;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: system-ui, sans-serif; max-width: 520px; margin: 40px auto; padding: 0 16px; }
+  h1 { text-align: center; }
+  .bar { text-align: right; }
+  input, select, button { background: var(--field); color: var(--fg); border: 1px solid var(--border); border-radius: 4px; }
+  button { background: var(--btn); }
+  form { display: flex; gap: 8px; flex-wrap: wrap; }
+  input[type=text], input[type=date], select { padding: 8px; font-size: 16px; }
+  #input { flex: 1 1 100%; }
+  #category { flex: 1; min-width: 0; }
+  button { padding: 8px 12px; font-size: 16px; cursor: pointer; }
+  #theme { font-size: 18px; padding: 4px 8px; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 24px 0 4px; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  li input[type=checkbox] { background: initial; flex: none; width: 20px; height: 20px; }
+  li .main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  li .text { overflow-wrap: anywhere; }
+  li button { flex: none; }
+  li.done .text { text-decoration: line-through; color: var(--faint); }
+  .due { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .due.overdue { color: var(--overdue); font-weight: 600; }
+  li.done .due { color: var(--faint); font-weight: normal; }
+  .editrow { display: flex; gap: 8px; flex: 1; min-width: 0; flex-wrap: wrap; }
+  .editrow input[type=text] { flex: 1 1 100%; min-width: 0; }
+  .editrow select, .editrow input[type=date] { flex: 1 1 120px; min-width: 0; }
+  .actions { display: flex; gap: 8px; margin-left: auto; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <button type="button" id="theme"></button>
+</div>
+<h1>To Do</h1>
+<form id="form">
+  <input type="text" id="input" placeholder="New item" autocomplete="off">
+  <select id="category" title="Category"></select>
+  <input type="date" id="due" title="Due date (optional)">
+  <button type="submit">Add</button>
+</form>
+<div id="list"></div>
+
+<script>
+  var CATEGORIES = ['Work', 'Personal', 'Others'];
+
+  // ---- theme ----
+  var themeSel = document.getElementById('theme');
+  var theme = null;
+  try { theme = localStorage.getItem('theme'); } catch (e) {}
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', theme);
+    // show the icon of the mode you would switch to
+    themeSel.textContent = theme === 'dark' ? '☀️' : '🌙';
+    var label = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+    themeSel.title = label;
+    themeSel.setAttribute('aria-label', label);
+  }
+  themeSel.onclick = function () {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('theme', theme); } catch (e) {}
+    applyTheme();
+  };
+  applyTheme();
+
+  // ---- data ----
+  var todos = [];
+  try { todos = JSON.parse(localStorage.getItem('todos')) || []; } catch (e) {}
+  // older items may have free-text categories; anything not in the list becomes "Others"
+  todos.forEach(function (t) {
+    if (CATEGORIES.indexOf(t.category) < 0) t.category = 'Others';
+    t.due = t.due || '';
+  });
+
+  var editing = null; // the todo object being edited
+  var list = document.getElementById('list');
+  var input = document.getElementById('input');
+  var catInput = document.getElementById('category');
+  var dueInput = document.getElementById('due');
+
+  function categorySelect(selected) {
+    var s = document.createElement('select');
+    CATEGORIES.forEach(function (c) {
+      var o = document.createElement('option');
+      o.value = o.textContent = c;
+      s.appendChild(o);
+    });
+    s.value = selected;
+    return s;
+  }
+  CATEGORIES.forEach(function (c) {
+    var o = document.createElement('option');
+    o.value = o.textContent = c;
+    catInput.appendChild(o);
+  });
+
+  function save() {
+    try { localStorage.setItem('todos', JSON.stringify(todos)); } catch (e) {}
+  }
+
+  function today() {
+    var d = new Date();
+    var m = ('0' + (d.getMonth() + 1)).slice(-2), day = ('0' + d.getDate()).slice(-2);
+    return d.getFullYear() + '-' + m + '-' + day;
+  }
+
+  function formatDue(s) {
+    var p = s.split('-');
+    return new Date(p[0], p[1] - 1, p[2]).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function button(label, title, fn) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = label;
+    b.title = title;
+    b.onclick = fn;
+    return b;
+  }
+
+  function renderItem(t) {
+    var li = document.createElement('li');
+    if (t.done) li.className = 'done';
+
+    var cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = t.done;
+    cb.onchange = function () { t.done = cb.checked; save(); render(); };
+
+    var del = button('🗑️', 'Delete', function () {
+      todos.splice(todos.indexOf(t), 1); save(); render();
+    });
+
+    if (editing === t) {
+      var row = document.createElement('div');
+      row.className = 'editrow';
+      var text = document.createElement('input');
+      text.type = 'text';
+      text.value = t.text;
+      var cat = categorySelect(t.category);
+      var due = document.createElement('input');
+      due.type = 'date';
+      due.value = t.due;
+
+      var finish = function (keep) {
+        if (keep) {
+          var v = text.value.trim();
+          if (v) t.text = v;
+          t.category = cat.value;
+          t.due = due.value;
+        }
+        editing = null;
+        save();
+        render();
+      };
+      [text, cat, due].forEach(function (f) {
+        f.onkeydown = function (e) {
+          if (e.key === 'Enter') finish(true);
+          else if (e.key === 'Escape') finish(false);
+        };
+      });
+      var actions = document.createElement('div');
+      actions.className = 'actions';
+      actions.append(button('Save', 'Save', function () { finish(true); }), del);
+      row.append(text, cat, due, actions);
+      li.append(cb, row);
+      setTimeout(function () { text.focus(); }, 0);
+    } else {
+      var span = document.createElement('span');
+      span.className = 'text';
+      span.textContent = t.text;
+      span.title = 'Double-click to edit';
+      span.ondblclick = function () { editing = t; render(); };
+      var main = document.createElement('div');
+      main.className = 'main';
+      main.append(span);
+
+      if (t.due) {
+        var d = document.createElement('span');
+        d.className = 'due' + (!t.done && t.due < today() ? ' overdue' : '');
+        d.textContent = (d.className.indexOf('overdue') >= 0 ? 'Overdue · ' : 'Due ') + formatDue(t.due);
+        main.append(d);
+      }
+      li.append(cb, main);
+      li.append(button('✏️', 'Edit', function () { editing = t; render(); }), del);
+    }
+    return li;
+  }
+
+  function render() {
+    list.innerHTML = '';
+
+    CATEGORIES.forEach(function (name) {
+      var items = todos.filter(function (t) { return t.category === name; });
+      if (!items.length) return;
+
+      var h = document.createElement('h2');
+      h.textContent = name;
+      var ul = document.createElement('ul');
+      // soonest due date first; items without a date last (sort is stable)
+      items.sort(function (a, b) {
+        if (a.due === b.due) return 0;
+        if (!a.due) return 1;
+        if (!b.due) return -1;
+        return a.due < b.due ? -1 : 1;
+      }).forEach(function (t) { ul.appendChild(renderItem(t)); });
+      list.append(h, ul);
+    });
+  }
+
+  document.getElementById('form').onsubmit = function (e) {
+    e.preventDefault();
+    var text = input.value.trim();
+    if (!text) return;
+    todos.push({ text: text, done: false, category: catInput.value, due: dueInput.value });
+    input.value = '';
+    dueInput.value = '';
+    save();
+    render();
+    input.focus();
+  };
+
+  render();
+</script>
+</body>
+</html>

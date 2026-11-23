@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>To Do – phone mockups</title>
+<style>
+  body { margin: 0; padding: 40px 16px; background: #e9e9ee; font-family: system-ui, sans-serif; color: #222; }
+  h1 { text-align: center; font-size: 20px; margin: 0 0 32px; }
+  .row { display: flex; gap: 56px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  figure { margin: 0; text-align: center; }
+  figure h2 { font-size: 18px; margin: 0 0 16px; }
+  figcaption { margin-top: 16px; font-size: 14px; color: #555; }
+  .phone { position: relative; background: #111; padding: 14px; box-shadow: 0 20px 50px rgba(0,0,0,.35), inset 0 0 0 2px #444; }
+  .phone iframe { display: block; border: 0; background: #fff; }
+  .iphone { border-radius: 60px; }
+  .iphone iframe { width: 390px; height: 844px; border-radius: 46px; }
+  .iphone::before { content: ""; position: absolute; top: 24px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 34px; background: #000; border-radius: 20px; z-index: 2; }
+  .galaxy { border-radius: 44px; padding: 12px; }
+  .galaxy iframe { width: 360px; height: 780px; border-radius: 32px; }
+  .galaxy::before { content: ""; position: absolute; top: 24px; left: 50%; transform: translateX(-50%);
+    width: 14px; height: 14px; background: #000; border-radius: 50%; box-shadow: 0 0 0 2px #222; z-index: 2; }
+</style>
+</head>
+<body>
+<h1>To Do app on phones</h1>
+<div class="row">
+  <figure>
+    <h2>iPhone</h2>
+    <div class="phone iphone"><iframe title="iPhone" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;script&gt;
+(function () {
+  function iso(n) { var d = new Date(); d.setDate(d.getDate() + n);
+    return d.getFullYear() + &#39;-&#39; + (&#39;0&#39; + (d.getMonth() + 1)).slice(-2) + &#39;-&#39; + (&#39;0&#39; + d.getDate()).slice(-2); }
+  var data = {
+    theme: &#39;light&#39;,
+    todos: JSON.stringify([
+      { text: &#39;Finish quarterly report&#39;, category: &#39;Work&#39;, due: iso(-3), done: false },
+      { text: &#39;Team standup notes&#39;, category: &#39;Work&#39;, due: iso(4), done: false },
+      { text: &#39;Book dentist appointment&#39;, category: &#39;Personal&#39;, due: iso(9), done: false },
+      { text: &#39;Buy groceries&#39;, category: &#39;Personal&#39;, due: &#39;&#39;, done: true },
+      { text: &#39;Renew passport&#39;, category: &#39;Others&#39;, due: iso(55), done: false }
+    ])
+  };
+  Object.defineProperty(window, &#39;localStorage&#39;, { value: {
+    getItem: function (k) { return data[k] === undefined ? null : data[k]; },
+    setItem: function (k, v) { data[k] = String(v); }
+  }});
+})();
+&lt;/script&gt;
+
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;To Do&lt;/title&gt;
+&lt;style&gt;
+  :root {
+    color-scheme: light;
+    --bg: #ffffff; --fg: #111111; --muted: #666666; --faint: #aaaaaa;
+    --border: #dddddd; --field: #ffffff; --btn: #efefef; --overdue: #cc0000;
+  }
+  :root[data-theme=&quot;dark&quot;] {
+    color-scheme: dark;
+    --bg: #1b1b1f; --fg: #eeeeee; --muted: #a0a0a8; --faint: #666670;
+    --border: #3a3a42; --field: #26262c; --btn: #33333b; --overdue: #ff6b6b;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: system-ui, sans-serif; max-width: 520px; margin: 40px auto; padding: 0 16px; }
+  h1 { text-align: center; }
+  .bar { text-align: right; }
+  input, select, button { background: var(--field); color: var(--fg); border: 1px solid var(--border); border-radius: 4px; }
+  button { background: var(--btn); }
+  form { display: flex; gap: 8px; flex-wrap: wrap; }
+  input[type=text], input[type=date], select { padding: 8px; font-size: 16px; }
+  #input { flex: 1 1 100%; }
+  #category { flex: 1; min-width: 0; }
+  button { padding: 8px 12px; font-size: 16px; cursor: pointer; }
+  #theme { font-size: 18px; padding: 4px 8px; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 24px 0 4px; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  li input[type=checkbox] { background: initial; flex: none; width: 20px; height: 20px; }
+  li .main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  li .text { overflow-wrap: anywhere; }
+  li button { flex: none; }
+  li.done .text { text-decoration: line-through; color: var(--faint); }
+  .due { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .due.overdue { color: var(--overdue); font-weight: 600; }
+  li.done .due { color: var(--faint); font-weight: normal; }
+  .editrow { display: flex; gap: 8px; flex: 1; min-width: 0; flex-wrap: wrap; }
+  .editrow input[type=text] { flex: 1 1 100%; min-width: 0; }
+  .editrow select, .editrow input[type=date] { flex: 1 1 120px; min-width: 0; }
+  .actions { display: flex; gap: 8px; margin-left: auto; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;bar&quot;&gt;
+  &lt;button type=&quot;button&quot; id=&quot;theme&quot;&gt;&lt;/button&gt;
+&lt;/div&gt;
+&lt;h1&gt;To Do&lt;/h1&gt;
+&lt;form id=&quot;form&quot;&gt;
+  &lt;input type=&quot;text&quot; id=&quot;input&quot; placeholder=&quot;New item&quot; autocomplete=&quot;off&quot;&gt;
+  &lt;select id=&quot;category&quot; title=&quot;Category&quot;&gt;&lt;/select&gt;
+  &lt;input type=&quot;date&quot; id=&quot;due&quot; title=&quot;Due date (optional)&quot;&gt;
+  &lt;button type=&quot;submit&quot;&gt;Add&lt;/button&gt;
+&lt;/form&gt;
+&lt;div id=&quot;list&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  var CATEGORIES = [&#39;Work&#39;, &#39;Personal&#39;, &#39;Others&#39;];
+
+  // ---- theme ----
+  var themeSel = document.getElementById(&#39;theme&#39;);
+  var theme = null;
+  try { theme = localStorage.getItem(&#39;theme&#39;); } catch (e) {}
+  if (theme !== &#39;light&#39; &amp;&amp; theme !== &#39;dark&#39;) {
+    theme = window.matchMedia &amp;&amp; matchMedia(&#39;(prefers-color-scheme: dark)&#39;).matches ? &#39;dark&#39; : &#39;light&#39;;
+  }
+  function applyTheme() {
+    document.documentElement.setAttribute(&#39;data-theme&#39;, theme);
+    // show the icon of the mode you would switch to
+    themeSel.textContent = theme === &#39;dark&#39; ? &#39;☀️&#39; : &#39;🌙&#39;;
+    var label = theme === &#39;dark&#39; ? &#39;Switch to light mode&#39; : &#39;Switch to dark mode&#39;;
+    themeSel.title = label;
+    themeSel.setAttribute(&#39;aria-label&#39;, label);
+  }
+  themeSel.onclick = function () {
+    theme = theme === &#39;dark&#39; ? &#39;light&#39; : &#39;dark&#39;;
+    try { localStorage.setItem(&#39;theme&#39;, theme); } catch (e) {}
+    applyTheme();
+  };
+  applyTheme();
+
+  // ---- data ----
+  var todos = [];
+  try { todos = JSON.parse(localStorage.getItem(&#39;todos&#39;)) || []; } catch (e) {}
+  // older items may have free-text categories; anything not in the list becomes &quot;Others&quot;
+  todos.forEach(function (t) {
+    if (CATEGORIES.indexOf(t.category) &lt; 0) t.category = &#39;Others&#39;;
+    t.due = t.due || &#39;&#39;;
+  });
+
+  var editing = null; // the todo object being edited
+  var list = document.getElementById(&#39;list&#39;);
+  var input = document.getElementById(&#39;input&#39;);
+  var catInput = document.getElementById(&#39;category&#39;);
+  var dueInput = document.getElementById(&#39;due&#39;);
+
+  function categorySelect(selected) {
+    var s = document.createElement(&#39;select&#39;);
+    CATEGORIES.forEach(function (c) {
+      var o = document.createElement(&#39;option&#39;);
+      o.value = o.textContent = c;
+      s.appendChild(o);
+    });
+    s.value = selected;
+    return s;
+  }
+  CATEGORIES.forEach(function (c) {
+    var o = document.createElement(&#39;option&#39;);
+    o.value = o.textContent = c;
+    catInput.appendChild(o);
+  });
+
+  function save() {
+    try { localStorage.setItem(&#39;todos&#39;, JSON.stringify(todos)); } catch (e) {}
+  }
+
+  function today() {
+    var d = new Date();
+    var m = (&#39;0&#39; + (d.getMonth() + 1)).slice(-2), day = (&#39;0&#39; + d.getDate()).slice(-2);
+    return d.getFullYear() + &#39;-&#39; + m + &#39;-&#39; + day;
+  }
+
+  function formatDue(s) {
+    var p = s.split(&#39;-&#39;);
+    return new Date(p[0], p[1] - 1, p[2]).toLocaleDateString(undefined, { month: &#39;short&#39;, day: &#39;numeric&#39;, year: &#39;numeric&#39; });
+  }
+
+  function button(label, title, fn) {
+    var b = document.createElement(&#39;button&#39;);
+    b.type = &#39;button&#39;;
+    b.textContent = label;
+    b.title = title;
+    b.onclick = fn;
+    return b;
+  }
+
+  function renderItem(t) {
+    var li = document.createElement(&#39;li&#39;);
+    if (t.done) li.className = &#39;done&#39;;
+
+    var cb = document.createElement(&#39;input&#39;);
+    cb.type = &#39;checkbox&#39;;
+    cb.checked = t.done;
+    cb.onchange = function () { t.done = cb.checked; save(); render(); };
+
+    var del = button(&#39;🗑️&#39;, &#39;Delete&#39;, function () {
+      todos.splice(todos.indexOf(t), 1); save(); render();
+    });
+
+    if (editing === t) {
+      var row = document.createElement(&#39;div&#39;);
+      row.className = &#39;editrow&#39;;
+      var text = document.createElement(&#39;input&#39;);
+      text.type = &#39;text&#39;;
+      text.value = t.text;
+      var cat = categorySelect(t.category);
+      var due = document.createElement(&#39;input&#39;);
+      due.type = &#39;date&#39;;
+      due.value = t.due;
+
+      var finish = function (keep) {
+        if (keep) {
+          var v = text.value.trim();
+          if (v) t.text = v;
+          t.category = cat.value;
+          t.due = due.value;
+        }
+        editing = null;
+        save();
+        render();
+      };
+      [text, cat, due].forEach(function (f) {
+        f.onkeydown = function (e) {
+          if (e.key === &#39;Enter&#39;) finish(true);
+          else if (e.key === &#39;Escape&#39;) finish(false);
+        };
+      });
+      var actions = document.createElement(&#39;div&#39;);
+      actions.className = &#39;actions&#39;;
+      actions.append(button(&#39;Save&#39;, &#39;Save&#39;, function () { finish(true); }), del);
+      row.append(text, cat, due, actions);
+      li.append(cb, row);
+      setTimeout(function () { text.focus(); }, 0);
+    } else {
+      var span = document.createElement(&#39;span&#39;);
+      span.className = &#39;text&#39;;
+      span.textContent = t.text;
+      span.title = &#39;Double-click to edit&#39;;
+      span.ondblclick = function () { editing = t; render(); };
+      var main = document.createElement(&#39;div&#39;);
+      main.className = &#39;main&#39;;
+      main.append(span);
+
+      if (t.due) {
+        var d = document.createElement(&#39;span&#39;);
+        d.className = &#39;due&#39; + (!t.done &amp;&amp; t.due &lt; today() ? &#39; overdue&#39; : &#39;&#39;);
+        d.textContent = (d.className.indexOf(&#39;overdue&#39;) &gt;= 0 ? &#39;Overdue · &#39; : &#39;Due &#39;) + formatDue(t.due);
+        main.append(d);
+      }
+      li.append(cb, main);
+      li.append(button(&#39;✏️&#39;, &#39;Edit&#39;, function () { editing = t; render(); }), del);
+    }
+    return li;
+  }
+
+  function render() {
+    list.innerHTML = &#39;&#39;;
+
+    CATEGORIES.forEach(function (name) {
+      var items = todos.filter(function (t) { return t.category === name; });
+      if (!items.length) return;
+
+      var h = document.createElement(&#39;h2&#39;);
+      h.textContent = name;
+      var ul = document.createElement(&#39;ul&#39;);
+      // soonest due date first; items without a date last (sort is stable)
+      items.sort(function (a, b) {
+        if (a.due === b.due) return 0;
+        if (!a.due) return 1;
+        if (!b.due) return -1;
+        return a.due &lt; b.due ? -1 : 1;
+      }).forEach(function (t) { ul.appendChild(renderItem(t)); });
+      list.append(h, ul);
+    });
+  }
+
+  document.getElementById(&#39;form&#39;).onsubmit = function (e) {
+    e.preventDefault();
+    var text = input.value.trim();
+    if (!text) return;
+    todos.push({ text: text, done: false, category: catInput.value, due: dueInput.value });
+    input.value = &#39;&#39;;
+    dueInput.value = &#39;&#39;;
+    save();
+    render();
+    input.focus();
+  };
+
+  render();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div>
+    <figcaption>390 × 844 · light mode</figcaption>
+  </figure>
+  <figure>
+    <h2>Samsung Galaxy S25</h2>
+    <div class="phone galaxy"><iframe title="Galaxy S25" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;&lt;script&gt;
+(function () {
+  function iso(n) { var d = new Date(); d.setDate(d.getDate() + n);
+    return d.getFullYear() + &#39;-&#39; + (&#39;0&#39; + (d.getMonth() + 1)).slice(-2) + &#39;-&#39; + (&#39;0&#39; + d.getDate()).slice(-2); }
+  var data = {
+    theme: &#39;dark&#39;,
+    todos: JSON.stringify([
+      { text: &#39;Finish quarterly report&#39;, category: &#39;Work&#39;, due: iso(-3), done: false },
+      { text: &#39;Team standup notes&#39;, category: &#39;Work&#39;, due: iso(4), done: false },
+      { text: &#39;Book dentist appointment&#39;, category: &#39;Personal&#39;, due: iso(9), done: false },
+      { text: &#39;Buy groceries&#39;, category: &#39;Personal&#39;, due: &#39;&#39;, done: true },
+      { text: &#39;Renew passport&#39;, category: &#39;Others&#39;, due: iso(55), done: false }
+    ])
+  };
+  Object.defineProperty(window, &#39;localStorage&#39;, { value: {
+    getItem: function (k) { return data[k] === undefined ? null : data[k]; },
+    setItem: function (k, v) { data[k] = String(v); }
+  }});
+})();
+&lt;/script&gt;
+
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;To Do&lt;/title&gt;
+&lt;style&gt;
+  :root {
+    color-scheme: light;
+    --bg: #ffffff; --fg: #111111; --muted: #666666; --faint: #aaaaaa;
+    --border: #dddddd; --field: #ffffff; --btn: #efefef; --overdue: #cc0000;
+  }
+  :root[data-theme=&quot;dark&quot;] {
+    color-scheme: dark;
+    --bg: #1b1b1f; --fg: #eeeeee; --muted: #a0a0a8; --faint: #666670;
+    --border: #3a3a42; --field: #26262c; --btn: #33333b; --overdue: #ff6b6b;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: system-ui, sans-serif; max-width: 520px; margin: 40px auto; padding: 0 16px; }
+  h1 { text-align: center; }
+  .bar { text-align: right; }
+  input, select, button { background: var(--field); color: var(--fg); border: 1px solid var(--border); border-radius: 4px; }
+  button { background: var(--btn); }
+  form { display: flex; gap: 8px; flex-wrap: wrap; }
+  input[type=text], input[type=date], select { padding: 8px; font-size: 16px; }
+  #input { flex: 1 1 100%; }
+  #category { flex: 1; min-width: 0; }
+  button { padding: 8px 12px; font-size: 16px; cursor: pointer; }
+  #theme { font-size: 18px; padding: 4px 8px; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 24px 0 4px; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  li input[type=checkbox] { background: initial; flex: none; width: 20px; height: 20px; }
+  li .main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  li .text { overflow-wrap: anywhere; }
+  li button { flex: none; }
+  li.done .text { text-decoration: line-through; color: var(--faint); }
+  .due { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .due.overdue { color: var(--overdue); font-weight: 600; }
+  li.done .due { color: var(--faint); font-weight: normal; }
+  .editrow { display: flex; gap: 8px; flex: 1; min-width: 0; flex-wrap: wrap; }
+  .editrow input[type=text] { flex: 1 1 100%; min-width: 0; }
+  .editrow select, .editrow input[type=date] { flex: 1 1 120px; min-width: 0; }
+  .actions { display: flex; gap: 8px; margin-left: auto; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;bar&quot;&gt;
+  &lt;button type=&quot;button&quot; id=&quot;theme&quot;&gt;&lt;/button&gt;
+&lt;/div&gt;
+&lt;h1&gt;To Do&lt;/h1&gt;
+&lt;form id=&quot;form&quot;&gt;
+  &lt;input type=&quot;text&quot; id=&quot;input&quot; placeholder=&quot;New item&quot; autocomplete=&quot;off&quot;&gt;
+  &lt;select id=&quot;category&quot; title=&quot;Category&quot;&gt;&lt;/select&gt;
+  &lt;input type=&quot;date&quot; id=&quot;due&quot; title=&quot;Due date (optional)&quot;&gt;
+  &lt;button type=&quot;submit&quot;&gt;Add&lt;/button&gt;
+&lt;/form&gt;
+&lt;div id=&quot;list&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  var CATEGORIES = [&#39;Work&#39;, &#39;Personal&#39;, &#39;Others&#39;];
+
+  // ---- theme ----
+  var themeSel = document.getElementById(&#39;theme&#39;);
+  var theme = null;
+  try { theme = localStorage.getItem(&#39;theme&#39;); } catch (e) {}
+  if (theme !== &#39;light&#39; &amp;&amp; theme !== &#39;dark&#39;) {
+    theme = window.matchMedia &amp;&amp; matchMedia(&#39;(prefers-color-scheme: dark)&#39;).matches ? &#39;dark&#39; : &#39;light&#39;;
+  }
+  function applyTheme() {
+    document.documentElement.setAttribute(&#39;data-theme&#39;, theme);
+    // show the icon of the mode you would switch to
+    themeSel.textContent = theme === &#39;dark&#39; ? &#39;☀️&#39; : &#39;🌙&#39;;
+    var label = theme === &#39;dark&#39; ? &#39;Switch to light mode&#39; : &#39;Switch to dark mode&#39;;
+    themeSel.title = label;
+    themeSel.setAttribute(&#39;aria-label&#39;, label);
+  }
+  themeSel.onclick = function () {
+    theme = theme === &#39;dark&#39; ? &#39;light&#39; : &#39;dark&#39;;
+    try { localStorage.setItem(&#39;theme&#39;, theme); } catch (e) {}
+    applyTheme();
+  };
+  applyTheme();
+
+  // ---- data ----
+  var todos = [];
+  try { todos = JSON.parse(localStorage.getItem(&#39;todos&#39;)) || []; } catch (e) {}
+  // older items may have free-text categories; anything not in the list becomes &quot;Others&quot;
+  todos.forEach(function (t) {
+    if (CATEGORIES.indexOf(t.category) &lt; 0) t.category = &#39;Others&#39;;
+    t.due = t.due || &#39;&#39;;
+  });
+
+  var editing = null; // the todo object being edited
+  var list = document.getElementById(&#39;list&#39;);
+  var input = document.getElementById(&#39;input&#39;);
+  var catInput = document.getElementById(&#39;category&#39;);
+  var dueInput = document.getElementById(&#39;due&#39;);
+
+  function categorySelect(selected) {
+    var s = document.createElement(&#39;select&#39;);
+    CATEGORIES.forEach(function (c) {
+      var o = document.createElement(&#39;option&#39;);
+      o.value = o.textContent = c;
+      s.appendChild(o);
+    });
+    s.value = selected;
+    return s;
+  }
+  CATEGORIES.forEach(function (c) {
+    var o = document.createElement(&#39;option&#39;);
+    o.value = o.textContent = c;
+    catInput.appendChild(o);
+  });
+
+  function save() {
+    try { localStorage.setItem(&#39;todos&#39;, JSON.stringify(todos)); } catch (e) {}
+  }
+
+  function today() {
+    var d = new Date();
+    var m = (&#39;0&#39; + (d.getMonth() + 1)).slice(-2), day = (&#39;0&#39; + d.getDate()).slice(-2);
+    return d.getFullYear() + &#39;-&#39; + m + &#39;-&#39; + day;
+  }
+
+  function formatDue(s) {
+    var p = s.split(&#39;-&#39;);
+    return new Date(p[0], p[1] - 1, p[2]).toLocaleDateString(undefined, { month: &#39;short&#39;, day: &#39;numeric&#39;, year: &#39;numeric&#39; });
+  }
+
+  function button(label, title, fn) {
+    var b = document.createElement(&#39;button&#39;);
+    b.type = &#39;button&#39;;
+    b.textContent = label;
+    b.title = title;
+    b.onclick = fn;
+    return b;
+  }
+
+  function renderItem(t) {
+    var li = document.createElement(&#39;li&#39;);
+    if (t.done) li.className = &#39;done&#39;;
+
+    var cb = document.createElement(&#39;input&#39;);
+    cb.type = &#39;checkbox&#39;;
+    cb.checked = t.done;
+    cb.onchange = function () { t.done = cb.checked; save(); render(); };
+
+    var del = button(&#39;🗑️&#39;, &#39;Delete&#39;, function () {
+      todos.splice(todos.indexOf(t), 1); save(); render();
+    });
+
+    if (editing === t) {
+      var row = document.createElement(&#39;div&#39;);
+      row.className = &#39;editrow&#39;;
+      var text = document.createElement(&#39;input&#39;);
+      text.type = &#39;text&#39;;
+      text.value = t.text;
+      var cat = categorySelect(t.category);
+      var due = document.createElement(&#39;input&#39;);
+      due.type = &#39;date&#39;;
+      due.value = t.due;
+
+      var finish = function (keep) {
+        if (keep) {
+          var v = text.value.trim();
+          if (v) t.text = v;
+          t.category = cat.value;
+          t.due = due.value;
+        }
+        editing = null;
+        save();
+        render();
+      };
+      [text, cat, due].forEach(function (f) {
+        f.onkeydown = function (e) {
+          if (e.key === &#39;Enter&#39;) finish(true);
+          else if (e.key === &#39;Escape&#39;) finish(false);
+        };
+      });
+      var actions = document.createElement(&#39;div&#39;);
+      actions.className = &#39;actions&#39;;
+      actions.append(button(&#39;Save&#39;, &#39;Save&#39;, function () { finish(true); }), del);
+      row.append(text, cat, due, actions);
+      li.append(cb, row);
+      setTimeout(function () { text.focus(); }, 0);
+    } else {
+      var span = document.createElement(&#39;span&#39;);
+      span.className = &#39;text&#39;;
+      span.textContent = t.text;
+      span.title = &#39;Double-click to edit&#39;;
+      span.ondblclick = function () { editing = t; render(); };
+      var main = document.createElement(&#39;div&#39;);
+      main.className = &#39;main&#39;;
+      main.append(span);
+
+      if (t.due) {
+        var d = document.createElement(&#39;span&#39;);
+        d.className = &#39;due&#39; + (!t.done &amp;&amp; t.due &lt; today() ? &#39; overdue&#39; : &#39;&#39;);
+        d.textContent = (d.className.indexOf(&#39;overdue&#39;) &gt;= 0 ? &#39;Overdue · &#39; : &#39;Due &#39;) + formatDue(t.due);
+        main.append(d);
+      }
+      li.append(cb, main);
+      li.append(button(&#39;✏️&#39;, &#39;Edit&#39;, function () { editing = t; render(); }), del);
+    }
+    return li;
+  }
+
+  function render() {
+    list.innerHTML = &#39;&#39;;
+
+    CATEGORIES.forEach(function (name) {
+      var items = todos.filter(function (t) { return t.category === name; });
+      if (!items.length) return;
+
+      var h = document.createElement(&#39;h2&#39;);
+      h.textContent = name;
+      var ul = document.createElement(&#39;ul&#39;);
+      // soonest due date first; items without a date last (sort is stable)
+      items.sort(function (a, b) {
+        if (a.due === b.due) return 0;
+        if (!a.due) return 1;
+        if (!b.due) return -1;
+        return a.due &lt; b.due ? -1 : 1;
+      }).forEach(function (t) { ul.appendChild(renderItem(t)); });
+      list.append(h, ul);
+    });
+  }
+
+  document.getElementById(&#39;form&#39;).onsubmit = function (e) {
+    e.preventDefault();
+    var text = input.value.trim();
+    if (!text) return;
+    todos.push({ text: text, done: false, category: catInput.value, due: dueInput.value });
+    input.value = &#39;&#39;;
+    dueInput.value = &#39;&#39;;
+    save();
+    render();
+    input.focus();
+  };
+
+  render();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div>
+    <figcaption>360 × 780 · dark mode</figcaption>
+  </figure>
+</div>
+</body>
+</html>
