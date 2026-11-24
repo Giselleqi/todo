@@ -14,7 +14,8 @@ Open `index.html` directly in a browser (double-click or `open index.html`). The
 
 ## Architecture
 
-- `index.html` — the entire app (markup, `<style>`, `<script>` in one file).
+- **Note:** `index.html` is now a copy of `expenses.html` (the expense tracker, served at the site root). The to-do app described below lives only in git history (commit 7483f7c) until restored.
+- `index.html` (to-do version) — the entire app (markup, `<style>`, `<script>` in one file).
   - State is a single array `todos = [{text, done, category, due}]`, persisted to `localStorage` under `todos`; the theme is stored under `theme`. All storage access is wrapped in try/catch so the app still works when storage is blocked.
   - `render()` rebuilds the whole list DOM from state: groups by the `CATEGORIES` array order (`Work`, `Personal`, `Others`; empty groups skipped), sorting each group by due date with undated items last. Items are referenced by object identity (the `editing` variable holds the todo being edited), not by index. Text is always set via `textContent`.
   - On load, todos whose category isn't in `CATEGORIES` are coerced to `Others` and a missing `due` becomes `''`. If you change the category list, keep this migration in mind.
